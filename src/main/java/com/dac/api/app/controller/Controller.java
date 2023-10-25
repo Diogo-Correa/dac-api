@@ -1,9 +1,10 @@
 package com.dac.api.app.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Controller<T, D> {
-    public List<T> index();
+    List<T> index();
 
-    public T show(Long id);
+    Optional<T> show(Long id);
 }
