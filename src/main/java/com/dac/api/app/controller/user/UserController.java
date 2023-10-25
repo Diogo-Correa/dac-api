@@ -16,7 +16,7 @@ import com.dac.api.app.service.user.UserService;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController implements Controller {
+public class UserController implements Controller<User> {
     private final UserService userService;
 
     public UserController(UserService userService) {
