@@ -2,7 +2,6 @@ package com.dac.api.app.model.edition;
 
 import java.util.List;
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.model.event.Event;
