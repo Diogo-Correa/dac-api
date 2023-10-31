@@ -9,6 +9,7 @@ import com.dac.api.app.model.event.Event;
 import com.dac.api.app.repository.event.EventRepository;
 import com.dac.api.app.service.Service;
 
+@org.springframework.stereotype.Service
 public class EventService implements Service<Event> {
 
     @Autowired
