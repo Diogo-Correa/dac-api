@@ -32,7 +32,13 @@ public class ActivityService implements Service<Activity> {
     }
 
     @Override
-    public Activity update(Activity data) {
+    public Activity update(Long id, Activity data) {
+
+        Activity activity = this.activityRepository.getReferenceById(id);
+
+        if (activity == null)
+            return null;
+
         return this.activityRepository.save(data);
     }
 

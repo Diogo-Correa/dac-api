@@ -32,7 +32,13 @@ public class EditionService implements Service<Edition> {
     }
 
     @Override
-    public Edition update(Edition data) {
+    public Edition update(Long id, Edition data) {
+
+        Edition edition = this.editionRepository.getReferenceById(id);
+
+        if (edition == null)
+            return null;
+
         return this.editionRepository.save(data);
     }
 

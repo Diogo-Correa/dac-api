@@ -10,7 +10,7 @@ public interface Service<T> {
 
     Optional<T> findById(Long id);
 
-    T update(T product);
+    T update(Long id, T data);
 
     void deleteById(Long id);
 }

@@ -8,5 +8,9 @@ public interface Controller<T> {
 
     Optional<T> show(Long id);
 
+    T create(T entity);
+
+    T update(Long id, T entity);
+
     void delete(Long id);
 }
