@@ -4,12 +4,14 @@ services:
     image: postgres:latest
     environment:
       - POSTGRES_DB=dac
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgresql
     volumes:
       - db-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
+    networks:
+      - switch
   rest:
     image: rest:latest
     build:
@@ -19,6 +21,10 @@ services:
       - 8080:8080
     depends_on:
       - postgres
-
+    networks:
+      - switch
 volumes:
   db-data:
+
+networks:
+  switch:

@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y maven
 ARG APP_DIR=/usr/app/
 
 # Variável para armazenar o nome do arquivo .jar da aplicação
-ARG JAR_FILE=./.mvn/wrapper/maven-wrapper.jar
+ARG JAR_FILE=.mvn/wrapper/maven-wrapper.jar
 
 # Cria o diretório da aplicação dentro do container
 RUN mkdir -p $APP_DIR
@@ -19,10 +19,14 @@ WORKDIR $APP_DIR
 COPY . $APP_DIR
 
 RUN mvn clean compile
-RUN mvn spring-boot:run
+RUN mvn package
+# RUN mvn spring-boot:run
 
 # Expõe a porta que a aplicação vai rodar
 EXPOSE 8080
+# EXPOSE 5432
 
 # Comando para iniciar a aplicação
-ENTRYPOINT ["java", "-jar", "maven-wrapper.jar"]
+# ENTRYPOINT ["java", "-jar", "./target/0.0.1-SNAPSHOT.jar"]
+
+ENTRYPOINT [ "mvn", "spring-boot:run" ]
