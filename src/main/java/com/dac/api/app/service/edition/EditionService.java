@@ -9,6 +9,7 @@ import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.repository.edition.EditionRepository;
 import com.dac.api.app.service.Service;
 
+@org.springframework.stereotype.Service
 public class EditionService implements Service<Edition> {
 
     @Autowired

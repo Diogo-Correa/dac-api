@@ -3,6 +3,7 @@ package com.dac.api.app.controller.user;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,9 @@ import com.dac.api.app.controller.Controller;
 import com.dac.api.app.model.user.User;
 import com.dac.api.app.service.user.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "User endpoints")
 @RestController
 @RequestMapping("/api/users")
 public class UserController implements Controller<User> {
@@ -31,5 +35,10 @@ public class UserController implements Controller<User> {
     @GetMapping("/{id}")
     public Optional<User> show(@PathVariable Long id) {
         return this.userService.findById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        this.userService.deleteById(id);
     }
 }

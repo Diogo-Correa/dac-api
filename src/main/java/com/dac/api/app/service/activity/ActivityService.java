@@ -9,6 +9,7 @@ import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.repository.activity.ActivityRepository;
 import com.dac.api.app.service.Service;
 
+@org.springframework.stereotype.Service
 public class ActivityService implements Service<Activity> {
 
     @Autowired
