@@ -7,4 +7,6 @@ public interface Controller<T> {
     List<T> index();
 
     Optional<T> show(Long id);
+
+    void delete(Long id);
 }

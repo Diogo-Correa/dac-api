@@ -1,20 +1,23 @@
 package com.dac.api.app.model.user;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
+import com.dac.api.app.model.activity.Activity;
+
 @Entity
+@Data
 @Table(name = "users")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class User {
@@ -26,12 +29,7 @@ public class User {
     private String email;
     private String password;
 
-    public User(
-            String username,
-            String email,
-            String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
+    @ManyToMany
+    @JoinTable(name = "user_activities", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    private List<Activity> favoritedActivities;
 }
