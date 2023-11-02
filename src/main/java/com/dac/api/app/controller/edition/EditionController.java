@@ -40,4 +40,16 @@ public class EditionController implements Controller<Edition> {
         this.editionService.deleteById(id);
     }
 
+    @Override
+    public Edition create(Edition entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    }
+
+    @Override
+    public Edition update(Long id, Edition entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
+
 }

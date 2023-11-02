@@ -32,7 +32,11 @@ public class EventService implements Service<Event> {
     }
 
     @Override
-    public Event update(Event data) {
+    public Event update(Long id, Event data) {
+        Event event = this.eventRepository.getReferenceById(id);
+
+        if (event == null)
+            return null;
         return this.eventRepository.save(data);
     }
 

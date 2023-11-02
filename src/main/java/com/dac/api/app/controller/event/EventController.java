@@ -40,4 +40,16 @@ public class EventController implements Controller<Event> {
         this.eventService.deleteById(id);
     }
 
+    @Override
+    public Event create(Event entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    }
+
+    @Override
+    public Event update(Long id, Event entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
+
 }

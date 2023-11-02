@@ -39,4 +39,16 @@ public class ActivityController implements Controller<Activity> {
     public void delete(@PathVariable Long id) {
         this.activityService.deleteById(id);
     }
+
+    @Override
+    public Activity create(Activity entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    }
+
+    @Override
+    public Activity update(Long id, Activity entity) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
 }
