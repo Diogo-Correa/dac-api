@@ -1,0 +1,45 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=dac
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=postgresql
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - switch
+
+  rest:
+    image: rest:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - switch
+
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    networks:
+      - switch
+    depends_on:
+      - db
+volumes:
+  db-data:
+
+networks: 
+  switch:
+    driver: bridge
