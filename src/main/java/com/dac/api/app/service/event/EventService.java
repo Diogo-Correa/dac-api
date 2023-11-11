@@ -5,24 +5,29 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dac.api.app.dto.EventSaveDTO;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.repository.event.EventRepository;
 import com.dac.api.app.service.Service;
+import com.dac.api.app.util.GenericMapper;
 
 @org.springframework.stereotype.Service
-public class EventService implements Service<Event> {
+public class EventService implements Service<Event, EventSaveDTO> {
 
     @Autowired
     private EventRepository eventRepository;
+
+    @Autowired
+    private GenericMapper genericMapper;
 
     @Override
     public List<Event> findAll() {
         return this.eventRepository.findAll();
     }
 
-    @Override
-    public Event save(Event data) {
-        return this.eventRepository.save(data);
+    public Event save(EventSaveDTO dto) {
+        Event event = genericMapper.toEntity(dto, Event.class);
+        return eventRepository.save(event);
     }
 
     @Override
@@ -32,17 +37,22 @@ public class EventService implements Service<Event> {
     }
 
     @Override
-    public Event update(Long id, Event data) {
+    public void deleteById(Long id) {
+        this.eventRepository.deleteById(id);
+    }
+
+    @Override
+    public Event update(Long id, EventSaveDTO data) {
         Event event = this.eventRepository.getReferenceById(id);
 
         if (event == null)
             return null;
-        return this.eventRepository.save(data);
-    }
 
-    @Override
-    public void deleteById(Long id) {
-        this.eventRepository.deleteById(id);
+        event.setName(data.getName());
+        event.setDescription(data.getDescription());
+        event.setAcronym(data.getAcronym());
+        event.setUrl(data.getUrl());
+        return this.eventRepository.save(event);
     }
 
 }

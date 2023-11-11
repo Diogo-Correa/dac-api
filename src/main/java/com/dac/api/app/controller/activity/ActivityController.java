@@ -3,13 +3,17 @@ package com.dac.api.app.controller.activity;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.ActivitySaveDTO;
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.service.activity.ActivityService;
 
@@ -18,12 +22,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Activity endpoints")
 @RestController
 @RequestMapping("/api/activities")
-public class ActivityController implements Controller<Activity> {
-    private final ActivityService activityService;
+public class ActivityController implements Controller<Activity, ActivitySaveDTO> {
 
-    public ActivityController(ActivityService activityService) {
-        this.activityService = activityService;
-    }
+    @Autowired
+    private ActivityService activityService;
 
     @GetMapping()
     public List<Activity> index() {
@@ -40,15 +42,13 @@ public class ActivityController implements Controller<Activity> {
         this.activityService.deleteById(id);
     }
 
-    @Override
-    public Activity create(Activity entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    @PostMapping("/")
+    public Activity create(ActivitySaveDTO entity) {
+        return this.activityService.save(entity);
     }
 
-    @Override
-    public Activity update(Long id, Activity entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    @PutMapping("/{id}")
+    public Activity update(Long id, ActivitySaveDTO entity) {
+        return this.activityService.update(id, entity);
     }
 }

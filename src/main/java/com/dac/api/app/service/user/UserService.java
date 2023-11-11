@@ -15,13 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dac.api.app.dto.AuthDTO;
+import com.dac.api.app.dto.UserSaveDTO;
 import com.dac.api.app.exception.UserFoundException;
 import com.dac.api.app.model.user.User;
 import com.dac.api.app.repository.user.UserRepository;
 import com.dac.api.app.service.Service;
+import com.dac.api.app.util.GenericMapper;
 
 @org.springframework.stereotype.Service
-public class UserService implements Service<User> {
+public class UserService implements Service<User, UserSaveDTO> {
 
     @Value("${security.jwt.secret}")
     private String secretKey;
@@ -32,13 +34,16 @@ public class UserService implements Service<User> {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private GenericMapper genericMapper;
+
     @Override
     public List<User> findAll() {
         return this.userRepository.findAll();
     }
 
     @Override
-    public User save(User data) {
+    public User save(UserSaveDTO data) {
 
         this.userRepository
                 .findByUsernameOrEmail(data.getUsername(), data.getEmail())
@@ -48,7 +53,9 @@ public class UserService implements Service<User> {
 
         var password = this.passwordEncoder.encode(data.getPassword());
         data.setPassword(password);
-        return this.userRepository.save(data);
+
+        User user = genericMapper.toEntity(data, User.class);
+        return this.userRepository.save(user);
     }
 
     @Override
@@ -58,7 +65,7 @@ public class UserService implements Service<User> {
     }
 
     @Override
-    public User update(Long id, User data) {
+    public User update(Long id, UserSaveDTO data) {
         User user = this.userRepository.getReferenceById(id);
 
         if (user == null)

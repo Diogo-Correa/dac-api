@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.UserSaveDTO;
 import com.dac.api.app.model.user.User;
 import com.dac.api.app.service.user.UserService;
 
@@ -22,7 +23,7 @@ import jakarta.validation.Valid;
 @Tag(name = "User endpoints")
 @RestController
 @RequestMapping("/api/users")
-public class UserController implements Controller<User> {
+public class UserController implements Controller<User, UserSaveDTO> {
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -40,12 +41,12 @@ public class UserController implements Controller<User> {
     }
 
     @PostMapping("/")
-    public User create(@Valid @RequestBody User entity) {
+    public User create(@Valid @RequestBody UserSaveDTO entity) {
         return this.userService.save(entity);
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @Valid @RequestBody User entity) {
+    public User update(@PathVariable Long id, @Valid @RequestBody UserSaveDTO entity) {
         return this.userService.update(id, entity);
     }
 

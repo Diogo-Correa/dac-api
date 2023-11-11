@@ -3,29 +3,32 @@ package com.dac.api.app.controller.edition;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.EditionSaveDTO;
 import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.service.edition.EditionService;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "Editions endpoints")
 @RestController
 @RequestMapping("/api/editions")
-public class EditionController implements Controller<Edition> {
-    private final EditionService editionService;
+public class EditionController implements Controller<Edition, EditionSaveDTO> {
 
-    public EditionController(EditionService editionService) {
-        this.editionService = editionService;
-    }
+    @Autowired
+    private EditionService editionService;
 
-    @GetMapping()
+    @GetMapping("/")
     public List<Edition> index() {
         return this.editionService.findAll();
     }
@@ -40,16 +43,14 @@ public class EditionController implements Controller<Edition> {
         this.editionService.deleteById(id);
     }
 
-    @Override
-    public Edition create(Edition entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+    @PostMapping("/")
+    public Edition create(@RequestBody EditionSaveDTO entity) {
+        return this.editionService.save(entity);
     }
 
-    @Override
-    public Edition update(Long id, Edition entity) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    @PutMapping("/{id}")
+    public Edition update(@PathVariable Long id, @RequestBody EditionSaveDTO entity) {
+        return this.editionService.update(id, entity);
     }
 
 }
