@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -12,6 +13,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import com.dac.api.app.filter.SecurityFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = {
@@ -36,13 +38,13 @@ public class SecurityConfig {
     private SecurityFilter securityFilter;
 
     @Bean
-    @Deprecated
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable())
-                .authorizeRequests(auth -> {
-                    auth.requestMatchers(AUTH_WHITELIST).permitAll();
-                    auth.anyRequest().authenticated();
-                })
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .requestMatchers(AUTH_WHITELIST).permitAll()
+                .anyRequest().authenticated()
+                .and()
                 .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
 
         return http.build();

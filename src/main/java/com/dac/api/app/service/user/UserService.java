@@ -109,4 +109,10 @@ public class UserService implements Service<User, UserSaveDTO> {
         return token;
     }
 
+    public User updateFavoriteActivity(Long id, Long activity_id) {
+        User user = this.userRepository.getReferenceById(id);
+
+        return this.userRepository.save(user);
+    }
+
 }

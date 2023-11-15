@@ -36,12 +36,6 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
     public Edition save(EditionSaveDTO data) {
         Edition edition = genericMapper.toEntity(data, Edition.class);
 
-        Event event = this.eventRepository.getReferenceById(data.getEvent_id());
-
-        if (event == null) {
-            throw new EventNotFoundException();
-        }
-
         return editionRepository.save(edition);
     }
 
@@ -79,6 +73,12 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
     @Override
     public void deleteById(Long id) {
         this.editionRepository.deleteById(id);
+    }
+
+    public Edition updateOrganizer(Long id, Long organizer_id) {
+        Edition edition = this.editionRepository.getReferenceById(id);
+
+        return this.editionRepository.save(edition);
     }
 
 }

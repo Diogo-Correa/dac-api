@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.ActivitySaveDTO;
@@ -18,6 +19,7 @@ import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.service.activity.ActivityService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Activity endpoints")
 @RestController
@@ -43,7 +45,7 @@ public class ActivityController implements Controller<Activity, ActivitySaveDTO>
     }
 
     @PostMapping("/")
-    public Activity create(ActivitySaveDTO entity) {
+    public Activity create(@Valid @RequestBody ActivitySaveDTO entity) {
         return this.activityService.save(entity);
     }
 

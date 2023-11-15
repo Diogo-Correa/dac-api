@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
@@ -16,8 +17,8 @@ import com.dac.api.app.dto.EventSaveDTO;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.service.event.EventService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Event endpoints")
 @RestController
@@ -29,7 +30,7 @@ public class EventController implements Controller<Event, EventSaveDTO> {
         this.eventService = eventService;
     }
 
-    @GetMapping()
+    @GetMapping("/")
     public List<Event> index() {
         return this.eventService.findAll();
     }
@@ -45,8 +46,8 @@ public class EventController implements Controller<Event, EventSaveDTO> {
     }
 
     @PostMapping("/")
-    public Event create(@RequestBody EventSaveDTO dto) {
-        return this.eventService.save(dto);
+    public Event create(@Valid @RequestBody EventSaveDTO entity) {
+        return this.eventService.save(entity);
     }
 
     @PutMapping("/{id}")

@@ -20,13 +20,12 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    JWTProvider jwtProvider;
+    private JWTProvider jwtProvider;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        SecurityContextHolder.getContext().setAuthentication(null);
         String header = request.getHeader("Authorization");
 
         if (header != null) {
@@ -34,6 +33,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
             if (subjectToken.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token inválido ou expirado");
                 return;
             }
 
@@ -42,10 +42,8 @@ public class SecurityFilter extends OncePerRequestFilter {
                     Collections.emptyList());
 
             SecurityContextHolder.getContext().setAuthentication(auth);
-
         }
 
         filterChain.doFilter(request, response);
     }
-
 }
