@@ -1,4 +1,4 @@
-package com.dac.api.app.controller.activity;
+package com.dac.api.app.controller.space;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,43 +14,43 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.controller.Controller;
-import com.dac.api.app.dto.ActivitySaveDTO;
-import com.dac.api.app.model.activity.Activity;
-import com.dac.api.app.service.activity.ActivityService;
+import com.dac.api.app.dto.SpaceSaveDTO;
+import com.dac.api.app.model.space.Space;
+import com.dac.api.app.service.space.SpaceService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
-@Tag(name = "Activity endpoints")
+@Tag(name = "Space endpoints")
 @RestController
-@RequestMapping("/api/activities")
-public class ActivityController implements Controller<Activity, ActivitySaveDTO> {
+@RequestMapping("/api/spaces")
+public class SpaceController implements Controller<Space, SpaceSaveDTO> {
 
     @Autowired
-    private ActivityService activityService;
+    private SpaceService spaceService;
 
     @GetMapping()
-    public List<Activity> index() {
-        return this.activityService.findAll();
+    public List<Space> index() {
+        return this.spaceService.findAll();
     }
 
     @GetMapping("/{id}")
-    public Optional<Activity> show(@PathVariable Long id) {
-        return this.activityService.findById(id);
+    public Optional<Space> show(@PathVariable Long id) {
+        return this.spaceService.findById(id);
     }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        this.activityService.deleteById(id);
+        this.spaceService.deleteById(id);
     }
 
     @PostMapping("/")
-    public Activity create(@Valid @RequestBody ActivitySaveDTO entity) {
-        return this.activityService.save(entity);
+    public Space create(@Valid @RequestBody SpaceSaveDTO entity) {
+        return this.spaceService.save(entity);
     }
 
     @PutMapping("/{id}")
-    public Activity update(Long id, ActivitySaveDTO entity) {
-        return this.activityService.update(id, entity);
+    public Space update(Long id, SpaceSaveDTO entity) {
+        return this.spaceService.update(id, entity);
     }
 }

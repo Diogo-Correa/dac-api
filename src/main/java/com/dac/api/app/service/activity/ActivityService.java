@@ -5,15 +5,20 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.dac.api.app.dto.ActivitySaveDTO;
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.repository.activity.ActivityRepository;
 import com.dac.api.app.service.Service;
+import com.dac.api.app.util.GenericMapper;
 
 @org.springframework.stereotype.Service
-public class ActivityService implements Service<Activity> {
+public class ActivityService implements Service<Activity, ActivitySaveDTO> {
 
     @Autowired
     private ActivityRepository activityRepository;
+
+    @Autowired
+    private GenericMapper genericMapper;
 
     @Override
     public List<Activity> findAll() {
@@ -21,8 +26,9 @@ public class ActivityService implements Service<Activity> {
     }
 
     @Override
-    public Activity save(Activity data) {
-        return this.activityRepository.save(data);
+    public Activity save(ActivitySaveDTO data) {
+        Activity activity = genericMapper.toEntity(data, Activity.class);
+        return this.activityRepository.save(activity);
     }
 
     @Override
@@ -32,8 +38,16 @@ public class ActivityService implements Service<Activity> {
     }
 
     @Override
-    public Activity update(Activity data) {
-        return this.activityRepository.save(data);
+    public Activity update(Long id, ActivitySaveDTO data) {
+
+        Activity activity = this.activityRepository.getReferenceById(id);
+
+        if (activity == null)
+            return null;
+
+        return null;
+
+        // return this.activityRepository.save(data);
     }
 
     @Override

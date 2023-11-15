@@ -21,10 +21,10 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    private String descricao;
-    private String sigla;
-    private String caminho;
+    private String name;
+    private String description;
+    private String acronym;
+    private String url;
 
     @OneToMany(mappedBy = "event")
     private List<Edition> editions;

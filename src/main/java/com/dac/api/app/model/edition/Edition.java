@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.model.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,12 +27,14 @@ public class Edition {
     private Long id;
     private int year;
     private int editionNumber;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate startDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate endDate;
+
     private String city;
-    private String callForPapers;
-    private String deadlines;
-    private String registrationInfo;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
