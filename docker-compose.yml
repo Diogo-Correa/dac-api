@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  db:
+  postgres:
     image: postgres:latest
     environment:
       - POSTGRES_DB=dac
@@ -21,7 +21,7 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - db
+      - postgres
     networks:
       - switch
 
@@ -36,7 +36,7 @@ services:
     networks:
       - switch
     depends_on:
-      - db
+      - postgres
 volumes:
   db-data:
 
