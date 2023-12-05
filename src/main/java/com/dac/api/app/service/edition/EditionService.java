@@ -82,7 +82,7 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
                     throw new EditionNotFoundException();
                 });
 
-        if (edition.getOrganizer() != user)
+        if (edition.getOrganizer() == null || edition.getOrganizer() != user)
             throw new UserNotOrganizerException();
 
         Event event = this.eventRepository.findById(data.getEvent_id()).orElseThrow(
