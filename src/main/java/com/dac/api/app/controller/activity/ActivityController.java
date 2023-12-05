@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,13 +31,13 @@ public class ActivityController implements Controller<Activity, ActivitySaveDTO>
     private ActivityService activityService;
 
     @GetMapping()
-    public List<Activity> index() {
-        return this.activityService.findAll();
+    public ResponseEntity<List<Activity>> index() {
+        return ResponseEntity.ok(this.activityService.findAll());
     }
 
     @GetMapping("/{id}")
-    public Optional<Activity> show(@PathVariable Long id) {
-        return this.activityService.findById(id);
+    public ResponseEntity<Optional<Activity>> show(@PathVariable Long id) {
+        return ResponseEntity.ok(this.activityService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -45,12 +46,12 @@ public class ActivityController implements Controller<Activity, ActivitySaveDTO>
     }
 
     @PostMapping("/")
-    public Activity create(@Valid @RequestBody ActivitySaveDTO entity) {
-        return this.activityService.save(entity);
+    public ResponseEntity<Activity> create(@Valid @RequestBody ActivitySaveDTO entity) {
+        return ResponseEntity.ok(this.activityService.save(entity));
     }
 
     @PutMapping("/{id}")
-    public Activity update(Long id, ActivitySaveDTO entity) {
-        return this.activityService.update(id, entity);
+    public ResponseEntity<Activity> update(Long id, ActivitySaveDTO entity) {
+        return ResponseEntity.ok(this.activityService.update(id, entity));
     }
 }

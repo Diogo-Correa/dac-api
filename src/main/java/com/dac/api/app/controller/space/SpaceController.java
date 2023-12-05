@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,13 +31,13 @@ public class SpaceController implements Controller<Space, SpaceSaveDTO> {
     private SpaceService spaceService;
 
     @GetMapping()
-    public List<Space> index() {
-        return this.spaceService.findAll();
+    public ResponseEntity<List<Space>> index() {
+        return ResponseEntity.ok(this.spaceService.findAll());
     }
 
     @GetMapping("/{id}")
-    public Optional<Space> show(@PathVariable Long id) {
-        return this.spaceService.findById(id);
+    public ResponseEntity<Optional<Space>> show(@PathVariable Long id) {
+        return ResponseEntity.ok(this.spaceService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -45,12 +46,12 @@ public class SpaceController implements Controller<Space, SpaceSaveDTO> {
     }
 
     @PostMapping("/")
-    public Space create(@Valid @RequestBody SpaceSaveDTO entity) {
-        return this.spaceService.save(entity);
+    public ResponseEntity<Space> create(@Valid @RequestBody SpaceSaveDTO entity) {
+        return ResponseEntity.ok(this.spaceService.save(entity));
     }
 
     @PutMapping("/{id}")
-    public Space update(Long id, SpaceSaveDTO entity) {
-        return this.spaceService.update(id, entity);
+    public ResponseEntity<Space> update(Long id, SpaceSaveDTO entity) {
+        return ResponseEntity.ok(this.spaceService.update(id, entity));
     }
 }

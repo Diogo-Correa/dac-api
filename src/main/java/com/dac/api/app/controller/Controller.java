@@ -3,14 +3,16 @@ package com.dac.api.app.controller;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
+
 public interface Controller<T, D> {
-    List<T> index();
+    ResponseEntity<List<T>> index();
 
-    Optional<T> show(Long id);
+    ResponseEntity<Optional<T>> show(Long id);
 
-    T create(D dto);
+    ResponseEntity<T> create(D dto);
 
-    T update(Long id, D dto);
+    ResponseEntity<T> update(Long id, D dto);
 
     void delete(Long id);
 }

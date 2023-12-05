@@ -3,6 +3,7 @@ package com.dac.api.app.controller.user;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,26 +35,26 @@ public class UserController implements Controller<User, UserSaveDTO> {
 
     @GetMapping("/")
     @Operation(description = "Endpoint para listagem de usuários.")
-    public List<User> index() {
-        return this.userService.findAll();
+    public ResponseEntity<List<User>> index() {
+        return ResponseEntity.ok(this.userService.findAll());
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Endpoint para exibição de usuários.")
-    public Optional<User> show(@PathVariable Long id) {
-        return this.userService.findById(id);
+    public ResponseEntity<Optional<User>> show(@PathVariable Long id) {
+        return ResponseEntity.ok(this.userService.findById(id));
     }
 
     @PostMapping("/")
     @Operation(description = "Endpoint para criação de usuários.")
-    public User create(@Valid @RequestBody UserSaveDTO entity) {
-        return this.userService.save(entity);
+    public ResponseEntity<User> create(@Valid @RequestBody UserSaveDTO entity) {
+        return ResponseEntity.ok(this.userService.save(entity));
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Endpoint para atualização de usuários.")
-    public User update(@PathVariable Long id, @Valid @RequestBody UserSaveDTO entity) {
-        return this.userService.update(id, entity);
+    public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody UserSaveDTO entity) {
+        return ResponseEntity.ok(this.userService.update(id, entity));
     }
 
     @DeleteMapping("/{id}")
@@ -64,7 +65,7 @@ public class UserController implements Controller<User, UserSaveDTO> {
 
     @PatchMapping("/{id}/activity/{activity_id}")
     @Operation(description = "Endpoint para favoritar atividades.")
-    public User updateFavoriteActivity(@PathVariable Long id, @PathVariable Long activity_id) {
-        return this.userService.updateFavoriteActivity(id, activity_id);
+    public ResponseEntity<User> updateFavoriteActivity(@PathVariable Long id, @PathVariable Long activity_id) {
+        return ResponseEntity.ok(this.userService.updateFavoriteActivity(id, activity_id));
     }
 }

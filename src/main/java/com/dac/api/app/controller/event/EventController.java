@@ -3,6 +3,7 @@ package com.dac.api.app.controller.event;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,13 +32,13 @@ public class EventController implements Controller<Event, EventSaveDTO> {
     }
 
     @GetMapping("/")
-    public List<Event> index() {
-        return this.eventService.findAll();
+    public ResponseEntity<List<Event>> index() {
+        return ResponseEntity.ok(this.eventService.findAll());
     }
 
     @GetMapping("/{id}")
-    public Optional<Event> show(@PathVariable Long id) {
-        return this.eventService.findById(id);
+    public ResponseEntity<Optional<Event>> show(@PathVariable Long id) {
+        return ResponseEntity.ok(this.eventService.findById(id));
     }
 
     @DeleteMapping("/{id}")
@@ -46,12 +47,12 @@ public class EventController implements Controller<Event, EventSaveDTO> {
     }
 
     @PostMapping("/")
-    public Event create(@Valid @RequestBody EventSaveDTO entity) {
-        return this.eventService.save(entity);
+    public ResponseEntity<Event> create(@Valid @RequestBody EventSaveDTO entity) {
+        return ResponseEntity.ok(this.eventService.save(entity));
     }
 
     @PutMapping("/{id}")
-    public Event update(Long id, EventSaveDTO dto) {
+    public ResponseEntity<Event> update(Long id, EventSaveDTO dto) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
