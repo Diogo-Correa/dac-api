@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -23,6 +24,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import com.dac.api.app.enums.UserRole;
 import com.dac.api.app.model.activity.Activity;
 
 @Entity
@@ -41,6 +43,7 @@ public class User {
     private String email;
 
     @Length(min = 10, max = 100)
+    @JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

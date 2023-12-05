@@ -1,4 +1,4 @@
-package com.dac.api.app.model.user;
+package com.dac.api.app.enums;
 
 public enum UserRole {
     ADMIN("admin"),

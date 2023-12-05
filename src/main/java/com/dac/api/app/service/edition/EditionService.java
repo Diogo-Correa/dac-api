@@ -4,14 +4,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.dac.api.app.dto.EditionSaveDTO;
 import com.dac.api.app.exception.EditionNotFoundException;
 import com.dac.api.app.exception.EventNotFoundException;
+import com.dac.api.app.exception.UserFoundException;
+import com.dac.api.app.exception.UserNotFoundException;
+import com.dac.api.app.exception.UserNotOrganizerException;
 import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.model.event.Event;
+import com.dac.api.app.model.user.User;
 import com.dac.api.app.repository.edition.EditionRepository;
 import com.dac.api.app.repository.event.EventRepository;
+import com.dac.api.app.repository.user.UserRepository;
 import com.dac.api.app.service.Service;
 import com.dac.api.app.util.GenericMapper;
 
@@ -25,6 +32,9 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
     private EventRepository eventRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private GenericMapper genericMapper;
 
     @Override
@@ -36,47 +46,88 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
     public Edition save(EditionSaveDTO data) {
         Edition edition = genericMapper.toEntity(data, Edition.class);
 
+        Event event = this.eventRepository.findById(data.getEvent_id()).orElseThrow(
+                () -> {
+                    throw new EventNotFoundException();
+                });
+
+        edition.setEvent(event);
+
         return editionRepository.save(edition);
     }
 
     @Override
     public Optional<Edition> findById(Long id) {
-        Edition edition = this.editionRepository.getReferenceById(id);
+        Edition edition = this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
         return Optional.of(edition);
     }
 
     @Override
     public Edition update(Long id, EditionSaveDTO data) {
 
-        Edition edition = this.editionRepository.getReferenceById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long authUser = Long.valueOf(authentication.getName());
 
-        if (edition == null) {
-            throw new EditionNotFoundException();
-        }
+        User user = this.userRepository.findById(authUser).orElseThrow(
+                () -> {
+                    throw new UserNotFoundException();
+                });
 
-        Event event = this.eventRepository.getReferenceById(data.getEvent_id());
+        Edition edition = this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
 
-        if (event == null) {
-            throw new EventNotFoundException();
-        }
+        if (edition.getOrganizer() != user)
+            throw new UserNotOrganizerException();
 
-        edition.setCity(data.getCity());
-        edition.setEditionNumber(data.getEditionNumber());
-        edition.setYear(data.getYear());
-        edition.setStartDate(data.getStartDate());
-        edition.setEndDate(data.getEndDate());
-        edition.setEvent(event);
+        Event event = this.eventRepository.findById(data.getEvent_id()).orElseThrow(
+                () -> {
+                    throw new EventNotFoundException();
+                });
+
+        if (data.getCity() != null)
+            edition.setCity(data.getCity());
+        if (Integer.valueOf(data.getEditionNumber()) != null)
+            edition.setEditionNumber(data.getEditionNumber());
+        if (Integer.valueOf(data.getYear()) != null)
+            edition.setYear(data.getYear());
+        if (data.getStartDate() != null)
+            edition.setStartDate(data.getStartDate());
+        if (data.getEndDate() != null)
+            edition.setEndDate(data.getEndDate());
+        if (data.getEvent_id() != null)
+            edition.setEvent(event);
 
         return this.editionRepository.save(edition);
     }
 
     @Override
     public void deleteById(Long id) {
+        this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
         this.editionRepository.deleteById(id);
     }
 
     public Edition updateOrganizer(Long id, Long organizer_id) {
-        Edition edition = this.editionRepository.getReferenceById(id);
+        Edition edition = this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
+        User organizer = this.userRepository.findById(organizer_id).orElseThrow(
+                () -> {
+                    throw new UserFoundException();
+                });
+
+        edition.setOrganizer(organizer);
 
         return this.editionRepository.save(edition);
     }

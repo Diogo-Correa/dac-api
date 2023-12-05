@@ -2,6 +2,7 @@ package com.dac.api.app.service.user;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.dac.api.app.dto.AuthDTO;
 import com.dac.api.app.dto.UserSaveDTO;
+import com.dac.api.app.exception.ActivityNotFoundException;
 import com.dac.api.app.exception.UserFoundException;
+import com.dac.api.app.exception.UserNotFoundException;
+import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.model.user.User;
+import com.dac.api.app.repository.activity.ActivityRepository;
 import com.dac.api.app.repository.user.UserRepository;
 import com.dac.api.app.service.Service;
 import com.dac.api.app.util.GenericMapper;
@@ -33,6 +38,9 @@ public class UserService implements Service<User, UserSaveDTO> {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ActivityRepository activityRepository;
 
     @Autowired
     private GenericMapper genericMapper;
@@ -110,8 +118,24 @@ public class UserService implements Service<User, UserSaveDTO> {
     }
 
     public User updateFavoriteActivity(Long id, Long activity_id) {
-        User user = this.userRepository.getReferenceById(id);
+        List<Activity> activities = new ArrayList<Activity>();
 
+        User user = this.userRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new UserNotFoundException();
+                });
+
+        activities = user.getFavoritedActivities();
+
+        Activity activity = this.activityRepository.findById(activity_id).orElseThrow(
+                () -> {
+                    throw new ActivityNotFoundException();
+                });
+
+        activities.add(activity);
+
+        user.setFavoritedActivities(activities);
+        
         return this.userRepository.save(user);
     }
 
