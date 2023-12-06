@@ -15,7 +15,6 @@ import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.model.space.Space;
 import com.dac.api.app.repository.edition.EditionRepository;
 import com.dac.api.app.repository.space.SpaceRepository;
-import com.dac.api.app.service.Service;
 import com.dac.api.app.util.GenericMapper;
 
 @org.springframework.stereotype.Service

@@ -22,6 +22,7 @@ import com.dac.api.app.service.edition.EditionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Editions endpoints")
 @RestController
@@ -47,12 +48,12 @@ public class EditionController implements Controller<Edition, EditionSaveDTO> {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Edition> create(@RequestBody EditionSaveDTO entity) {
+    public ResponseEntity<Edition> create(@Valid @RequestBody EditionSaveDTO entity) {
         return ResponseEntity.ok(this.editionService.save(entity));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Edition> update(@PathVariable Long id, @RequestBody EditionSaveDTO entity) {
+    public ResponseEntity<Edition> update(@PathVariable Long id, @Valid @RequestBody EditionSaveDTO entity) {
         return ResponseEntity.ok(this.editionService.update(id, entity));
     }
 

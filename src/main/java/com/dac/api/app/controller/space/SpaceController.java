@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.SpaceSaveDTO;
 import com.dac.api.app.model.space.Space;
 import com.dac.api.app.service.space.SpaceService;
@@ -51,7 +50,7 @@ public class SpaceController {
     }
 
     @PutMapping("/{id}/edition/{editionId}")
-    public ResponseEntity<Space> update(@PathVariable Long id, @PathVariable Long editionId,
+    public ResponseEntity<Space> update(@PathVariable Long id, @Valid @PathVariable Long editionId,
             @Valid @RequestBody SpaceSaveDTO entity) {
         return ResponseEntity.ok(this.spaceService.update(id, editionId, entity));
     }

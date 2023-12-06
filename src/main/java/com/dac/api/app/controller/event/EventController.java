@@ -52,9 +52,9 @@ public class EventController implements Controller<Event, EventSaveDTO> {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> update(Long id, EventSaveDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ResponseEntity<Event> update(@PathVariable Long id, @Valid @RequestBody EventSaveDTO dto) {
+        return ResponseEntity.ok(this.eventService.update(id, dto));
+
     }
 
 }
