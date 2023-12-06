@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.dac.api.app.dto.EditionSaveDTO;
+import com.dac.api.app.enums.UserRole;
 import com.dac.api.app.exception.EditionNotFoundException;
 import com.dac.api.app.exception.EventNotFoundException;
 import com.dac.api.app.exception.UserFoundException;
@@ -82,7 +83,7 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
                     throw new EditionNotFoundException();
                 });
 
-        if (edition.getOrganizer() == null || edition.getOrganizer() != user)
+        if (edition.getOrganizer() == null || edition.getOrganizer() != user || user.getRole() != UserRole.ADMIN)
             throw new UserNotOrganizerException();
 
         Event event = this.eventRepository.findById(data.getEvent_id()).orElseThrow(

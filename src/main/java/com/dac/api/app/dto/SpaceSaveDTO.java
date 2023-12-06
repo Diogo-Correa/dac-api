@@ -14,5 +14,4 @@ public class SpaceSaveDTO {
     private String location;
     private String capacity;
     private List<String> resources;
-    private Long activity_id;
 }

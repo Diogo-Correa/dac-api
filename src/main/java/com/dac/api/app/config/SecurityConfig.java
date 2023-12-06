@@ -42,9 +42,20 @@ public class SecurityConfig {
                         "/api/editions/"
         };
 
+        private static final String[] ADMIN_DELETE_WHITELIST = {
+                        // admin endpoints
+                        "/api/events/**",
+                        "/api/editions/**",
+        };
+
         private static final String[] ADMIN_PATCH_WHITELIST = {
                         // admin endpoints
                         "/api/editions/**"
+        };
+
+        private static final String[] ADMIN_PUT_WHITELIST = {
+                        // admin endpoints
+                        // "/api/editions/**"
         };
 
         @Autowired
@@ -59,7 +70,11 @@ public class SecurityConfig {
                                 .authorizeHttpRequests(authorize -> authorize
                                                 .requestMatchers(AUTH_WHITELIST).permitAll()
                                                 .requestMatchers(HttpMethod.POST, ADMIN_POST_WHITELIST).hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.DELETE, ADMIN_DELETE_WHITELIST)
+                                                .hasRole("ADMIN")
                                                 .requestMatchers(HttpMethod.PATCH, ADMIN_PATCH_WHITELIST)
+                                                .hasRole("ADMIN")
+                                                .requestMatchers(HttpMethod.PUT, ADMIN_PUT_WHITELIST)
                                                 .hasRole("ADMIN")
                                                 .anyRequest().authenticated())
                                 .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);

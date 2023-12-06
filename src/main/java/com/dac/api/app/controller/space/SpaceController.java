@@ -25,7 +25,7 @@ import jakarta.validation.Valid;
 @Tag(name = "Space endpoints")
 @RestController
 @RequestMapping("/api/spaces")
-public class SpaceController implements Controller<Space, SpaceSaveDTO> {
+public class SpaceController {
 
     @Autowired
     private SpaceService spaceService;
@@ -45,13 +45,13 @@ public class SpaceController implements Controller<Space, SpaceSaveDTO> {
         this.spaceService.deleteById(id);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Space> create(@Valid @RequestBody SpaceSaveDTO entity) {
-        return ResponseEntity.ok(this.spaceService.save(entity));
+    @PostMapping("/{editionId}")
+    public ResponseEntity<Space> create(@PathVariable Long editionId, @Valid @RequestBody SpaceSaveDTO entity) {
+        return ResponseEntity.ok(this.spaceService.save(editionId, entity));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Space> update(Long id, SpaceSaveDTO entity) {
+    public ResponseEntity<Space> update(@PathVariable Long id, @RequestBody SpaceSaveDTO entity) {
         return ResponseEntity.ok(this.spaceService.update(id, entity));
     }
 }
