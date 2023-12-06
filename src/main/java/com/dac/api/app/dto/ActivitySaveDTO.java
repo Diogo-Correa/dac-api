@@ -31,4 +31,7 @@ public class ActivitySaveDTO {
     private Time endTime;
 
     private String location;
+
+    private Long edition_id;
+    private Long space_id;
 }

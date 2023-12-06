@@ -38,7 +38,30 @@ public class SpaceService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long authUser = Long.valueOf(authentication.getName());
 
+        Edition edition = this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
+        if (authUser != edition.getOrganizer().getId())
+            throw new UserNotOrganizerException();
+
         Space space = genericMapper.toEntity(data, Space.class);
+
+        return this.spaceRepository.save(space);
+    }
+
+    public Optional<Space> findById(Long id) {
+        Space space = this.spaceRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new SpaceNotFoundException();
+                });
+        return Optional.of(space);
+    }
+
+    public Space update(Long id, Long editionId, SpaceSaveDTO data) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long authUser = Long.valueOf(authentication.getName());
 
         Edition edition = this.editionRepository.findById(id).orElseThrow(
                 () -> {
@@ -48,38 +71,39 @@ public class SpaceService {
         if (authUser != edition.getOrganizer().getId())
             throw new UserNotOrganizerException();
 
-        return this.spaceRepository.save(space);
-    }
-
-    public Optional<Space> findById(Long id) {
-        Space space = this.spaceRepository.getReferenceById(id);
-        return Optional.of(space);
-    }
-
-    public Space update(Long id, SpaceSaveDTO data) {
-
-        Space activity = this.spaceRepository.getReferenceById(id);
-
-        if (activity == null)
-            return null;
-
-        return null;
-
-        // return this.activityRepository.save(data);
-    }
-
-    public void deleteById(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long authUser = Long.valueOf(authentication.getName());
         Space space = this.spaceRepository.findById(id).orElseThrow(
                 () -> {
                     throw new SpaceNotFoundException();
                 });
 
-        Long organizerId = space.getActivity().getEdition().getOrganizer().getId();
+        if (Integer.valueOf(data.getCapacity()) != null)
+            space.setCapacity(data.getCapacity());
+        if (data.getName() != null)
+            space.setName(data.getName());
+        if (data.getLocation() != null)
+            space.setLocation(data.getLocation());
+        if (data.getResources() != null)
+            space.setResources(data.getResources());
 
-        if (authUser != organizerId)
+        return this.spaceRepository.save(space);
+    }
+
+    public void deleteById(Long id, Long editionId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long authUser = Long.valueOf(authentication.getName());
+
+        Edition edition = this.editionRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
+        if (authUser != edition.getOrganizer().getId())
             throw new UserNotOrganizerException();
+
+        this.spaceRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new SpaceNotFoundException();
+                });
 
         this.spaceRepository.deleteById(id);
     }

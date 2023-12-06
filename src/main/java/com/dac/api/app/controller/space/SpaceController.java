@@ -30,7 +30,7 @@ public class SpaceController {
     @Autowired
     private SpaceService spaceService;
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<List<Space>> index() {
         return ResponseEntity.ok(this.spaceService.findAll());
     }
@@ -40,9 +40,9 @@ public class SpaceController {
         return ResponseEntity.ok(this.spaceService.findById(id));
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        this.spaceService.deleteById(id);
+    @DeleteMapping("/{id}/edition/{editionId}")
+    public void delete(@PathVariable Long id, @PathVariable Long editionId) {
+        this.spaceService.deleteById(id, editionId);
     }
 
     @PostMapping("/{editionId}")
@@ -50,8 +50,9 @@ public class SpaceController {
         return ResponseEntity.ok(this.spaceService.save(editionId, entity));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Space> update(@PathVariable Long id, @RequestBody SpaceSaveDTO entity) {
-        return ResponseEntity.ok(this.spaceService.update(id, entity));
+    @PutMapping("/{id}/edition/{editionId}")
+    public ResponseEntity<Space> update(@PathVariable Long id, @PathVariable Long editionId,
+            @Valid @RequestBody SpaceSaveDTO entity) {
+        return ResponseEntity.ok(this.spaceService.update(id, editionId, entity));
     }
 }

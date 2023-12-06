@@ -55,6 +55,7 @@ public class SecurityConfig {
 
         private static final String[] ADMIN_PUT_WHITELIST = {
                         // admin endpoints
+                        "/api/events/**"
                         // "/api/editions/**"
         };
 

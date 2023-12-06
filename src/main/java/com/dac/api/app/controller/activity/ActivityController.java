@@ -30,7 +30,7 @@ public class ActivityController implements Controller<Activity, ActivitySaveDTO>
     @Autowired
     private ActivityService activityService;
 
-    @GetMapping()
+    @GetMapping("/")
     public ResponseEntity<List<Activity>> index() {
         return ResponseEntity.ok(this.activityService.findAll());
     }
@@ -51,7 +51,7 @@ public class ActivityController implements Controller<Activity, ActivitySaveDTO>
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Activity> update(Long id, ActivitySaveDTO entity) {
+    public ResponseEntity<Activity> update(@PathVariable Long id, @Valid @RequestBody ActivitySaveDTO entity) {
         return ResponseEntity.ok(this.activityService.update(id, entity));
     }
 }
