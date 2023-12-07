@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.dac.api.app.dto.EventSaveDTO;
+import com.dac.api.app.exception.EventNotFoundException;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.repository.event.EventRepository;
 import com.dac.api.app.service.Service;
@@ -43,10 +44,10 @@ public class EventService implements Service<Event, EventSaveDTO> {
 
     @Override
     public Event update(Long id, EventSaveDTO data) {
-        Event event = this.eventRepository.getReferenceById(id);
-
-        if (event == null)
-            return null;
+        Event event = this.eventRepository.findById(id).orElseThrow(
+                () -> {
+                    throw new EventNotFoundException();
+                });
 
         event.setName(data.getName());
         event.setDescription(data.getDescription());
