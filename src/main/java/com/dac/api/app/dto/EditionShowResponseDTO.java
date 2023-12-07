@@ -1,6 +1,7 @@
 package com.dac.api.app.dto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,8 @@ public class EditionShowResponseDTO {
     private LocalDate start_date;
     private LocalDate end_date;
     private int year;
+
+    private List<ActivityResponseDTO> activities;
 
     private UserResponseDTO organizer;
     private EventResponseDTO event;

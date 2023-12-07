@@ -2,6 +2,7 @@ package com.dac.api.app.controller.space;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.dto.ApiResponseDTO;
+import com.dac.api.app.dto.SpaceResponseDTO;
 import com.dac.api.app.dto.SpaceSaveDTO;
 import com.dac.api.app.dto.SpaceShowResponseDTO;
 import com.dac.api.app.model.space.Space;
@@ -40,7 +42,10 @@ public class SpaceController {
     public ResponseEntity<ApiResponseDTO> index() {
         try {
             List<Space> spaces = this.spaceService.findAll();
-            return ResponseEntity.ok(new ApiResponseDTO("List of spaces", spaces));
+            List<SpaceResponseDTO> response = spaces.stream()
+                    .map(user -> this.genericMapper.toDTO(user, SpaceResponseDTO.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(new ApiResponseDTO("List of spaces", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }

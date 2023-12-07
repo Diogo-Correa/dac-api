@@ -2,6 +2,7 @@ package com.dac.api.app.controller.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.ApiResponseDTO;
+import com.dac.api.app.dto.UserResponseDTO;
 import com.dac.api.app.dto.UserSaveDTO;
 import com.dac.api.app.dto.UserShowResponseDTO;
 import com.dac.api.app.model.user.User;
@@ -44,7 +46,11 @@ public class UserController implements Controller<UserSaveDTO> {
     public ResponseEntity<ApiResponseDTO> index() {
         try {
             List<User> users = this.userService.findAll();
-            return ResponseEntity.ok(new ApiResponseDTO("List of users", users));
+            List<UserResponseDTO> usersResponse = users.stream()
+                    .map(user -> this.genericMapper.toDTO(user, UserResponseDTO.class))
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new ApiResponseDTO("List of users", usersResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }

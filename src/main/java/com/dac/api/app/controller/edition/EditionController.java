@@ -2,6 +2,7 @@ package com.dac.api.app.controller.edition;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.ApiResponseDTO;
+import com.dac.api.app.dto.EditionResponseDTO;
 import com.dac.api.app.dto.EditionSaveDTO;
 import com.dac.api.app.dto.EditionShowResponseDTO;
 import com.dac.api.app.model.edition.Edition;
@@ -43,7 +45,10 @@ public class EditionController implements Controller<EditionSaveDTO> {
     public ResponseEntity<ApiResponseDTO> index() {
         try {
             List<Edition> editions = this.editionService.findAll();
-            return ResponseEntity.ok(new ApiResponseDTO("List of editions", editions));
+            List<EditionResponseDTO> response = editions.stream()
+                    .map(user -> this.genericMapper.toDTO(user, EditionResponseDTO.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(new ApiResponseDTO("List of editions", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }

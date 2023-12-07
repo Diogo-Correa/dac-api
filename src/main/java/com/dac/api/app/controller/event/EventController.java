@@ -2,6 +2,7 @@ package com.dac.api.app.controller.event;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.ApiResponseDTO;
+import com.dac.api.app.dto.EventResponseDTO;
 import com.dac.api.app.dto.EventSaveDTO;
 import com.dac.api.app.dto.EventShowResponseDTO;
 import com.dac.api.app.model.event.Event;
@@ -41,7 +43,10 @@ public class EventController implements Controller<EventSaveDTO> {
     public ResponseEntity<ApiResponseDTO> index() {
         try {
             List<Event> events = this.eventService.findAll();
-            return ResponseEntity.ok(new ApiResponseDTO("List of events", events));
+            List<EventResponseDTO> response = events.stream()
+                    .map(user -> this.genericMapper.toDTO(user, EventResponseDTO.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(new ApiResponseDTO("List of events", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
