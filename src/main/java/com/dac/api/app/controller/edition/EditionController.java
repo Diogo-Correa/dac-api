@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.dac.api.app.controller.Controller;
 import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.EditionSaveDTO;
+import com.dac.api.app.dto.EditionShowResponseDTO;
 import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.service.edition.EditionService;
+import com.dac.api.app.util.GenericMapper;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,6 +35,9 @@ public class EditionController implements Controller<EditionSaveDTO> {
 
     @Autowired
     private EditionService editionService;
+
+    @Autowired
+    private GenericMapper genericMapper;
 
     @GetMapping("/")
     public ResponseEntity<ApiResponseDTO> index() {
@@ -48,7 +53,8 @@ public class EditionController implements Controller<EditionSaveDTO> {
     public ResponseEntity<ApiResponseDTO> show(@PathVariable Long id) {
         try {
             Optional<Edition> edition = this.editionService.findById(id);
-            return ResponseEntity.ok(new ApiResponseDTO("Show edition", edition));
+            EditionShowResponseDTO response = this.genericMapper.toDTO(edition, EditionShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Show edition", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -68,7 +74,8 @@ public class EditionController implements Controller<EditionSaveDTO> {
     public ResponseEntity<ApiResponseDTO> create(@Valid @RequestBody EditionSaveDTO entity) {
         try {
             Edition edition = this.editionService.save(entity);
-            return ResponseEntity.ok(new ApiResponseDTO("Edition created", edition));
+            EditionShowResponseDTO response = this.genericMapper.toDTO(edition, EditionShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition created", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -78,7 +85,8 @@ public class EditionController implements Controller<EditionSaveDTO> {
     public ResponseEntity<ApiResponseDTO> update(@PathVariable Long id, @Valid @RequestBody EditionSaveDTO entity) {
         try {
             Edition edition = this.editionService.update(id, entity);
-            return ResponseEntity.ok(new ApiResponseDTO("Edition updated", edition));
+            EditionShowResponseDTO response = this.genericMapper.toDTO(edition, EditionShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition updated", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -89,7 +97,8 @@ public class EditionController implements Controller<EditionSaveDTO> {
     public ResponseEntity<ApiResponseDTO> updateOrganizer(@PathVariable Long id, @PathVariable Long organizer_id) {
         try {
             Edition edition = this.editionService.updateOrganizer(id, organizer_id);
-            return ResponseEntity.ok(new ApiResponseDTO("Edition organizer setted", edition));
+            EditionShowResponseDTO response = this.genericMapper.toDTO(edition, EditionShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition organizer setted", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
