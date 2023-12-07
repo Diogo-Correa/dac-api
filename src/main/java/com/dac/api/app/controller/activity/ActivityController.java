@@ -1,7 +1,10 @@
 package com.dac.api.app.controller.activity;
 
+import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.ActivityResponseDTO;
 import com.dac.api.app.dto.ActivitySaveDTO;
+import com.dac.api.app.dto.ActivityShowResponseDTO;
 import com.dac.api.app.dto.ApiResponseDTO;
+import com.dac.api.app.dto.UserMailResponseDTO;
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.service.activity.ActivityService;
+import com.dac.api.app.util.GenericMapper;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,11 +39,17 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
     @Autowired
     private ActivityService activityService;
 
+    @Autowired
+    private GenericMapper genericMapper;
+
     @GetMapping("/")
     public ResponseEntity<ApiResponseDTO> index() {
         try {
             List<Activity> activities = this.activityService.findAll();
-            return ResponseEntity.ok(new ApiResponseDTO("List of activities", activities));
+            List<ActivityResponseDTO> activitiesResponse = activities.stream()
+                    .map(user -> this.genericMapper.toDTO(user, ActivityResponseDTO.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(new ApiResponseDTO("List of activities", activitiesResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -46,7 +59,8 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
     public ResponseEntity<ApiResponseDTO> show(@PathVariable Long id) {
         try {
             Optional<Activity> activity = this.activityService.findById(id);
-            return ResponseEntity.ok(new ApiResponseDTO("Show activity", activity));
+            ActivityShowResponseDTO response = this.genericMapper.toDTO(activity, ActivityShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Show activity", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -66,7 +80,8 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
     public ResponseEntity<ApiResponseDTO> create(@Valid @RequestBody ActivitySaveDTO entity) {
         try {
             Activity activity = this.activityService.save(entity);
-            return ResponseEntity.ok(new ApiResponseDTO("Activity created", activity));
+            ActivityShowResponseDTO response = this.genericMapper.toDTO(activity, ActivityShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Activity created", response));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }
@@ -76,7 +91,22 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
     public ResponseEntity<ApiResponseDTO> update(@PathVariable Long id, @Valid @RequestBody ActivitySaveDTO entity) {
         try {
             Activity activity = this.activityService.update(id, entity);
-            return ResponseEntity.ok(new ApiResponseDTO("Activity updated", activity));
+            ActivityShowResponseDTO response = this.genericMapper.toDTO(activity, ActivityShowResponseDTO.class);
+            return ResponseEntity.ok(new ApiResponseDTO("Activity updated", response));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
+    }
+
+    @GetMapping("/nextHour")
+    public ResponseEntity<ApiResponseDTO> getActivitiesStartingWithinNextHour() {
+        try {
+            List<Activity> activities = this.activityService.getActivitiesStartingWithinNextHour();
+            List<UserMailResponseDTO> activitiesResponse = activities.stream()
+                    .map(user -> this.genericMapper.toDTO(user, UserMailResponseDTO.class))
+                    .collect(Collectors.toList());
+            return ResponseEntity
+                    .ok(new ApiResponseDTO("List of activities starting within next hour", activitiesResponse));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
         }

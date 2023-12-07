@@ -2,6 +2,8 @@ package com.dac.api.app.service.activity;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -106,6 +108,17 @@ public class ActivityService implements Service<Activity, ActivitySaveDTO> {
             throw new UserNotOrganizerException();
 
         this.activityRepository.deleteById(id);
+    }
+
+    public List<Activity> getActivitiesStartingWithinNextHour() {
+        LocalDateTime now = LocalDateTime.now();
+
+        LocalDateTime oneHourLater = now.plusHours(1);
+
+        System.out.println("OneHourLater: " + oneHourLater.toLocalTime());
+
+        return activityRepository.findByDateAndStartTimeBetween(now.toLocalDate(),
+                now.toLocalTime(), oneHourLater.toLocalTime());
     }
 
 }
