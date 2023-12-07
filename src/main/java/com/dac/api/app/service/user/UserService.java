@@ -132,10 +132,13 @@ public class UserService implements Service<User, UserSaveDTO> {
                     throw new ActivityNotFoundException();
                 });
 
-        activities.add(activity);
+        if (activities.contains(activity))
+            activities.remove(activity);
+        else
+            activities.add(activity);
 
         user.setFavoritedActivities(activities);
-        
+
         return this.userRepository.save(user);
     }
 
