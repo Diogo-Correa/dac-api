@@ -1,7 +1,5 @@
 package com.dac.api.app.controller.activity;
 
-import java.time.LocalTime;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,8 +21,8 @@ import com.dac.api.app.dto.ActivityResponseDTO;
 import com.dac.api.app.dto.ActivitySaveDTO;
 import com.dac.api.app.dto.ActivityShowResponseDTO;
 import com.dac.api.app.dto.ApiResponseDTO;
-import com.dac.api.app.dto.UserMailResponseDTO;
 import com.dac.api.app.model.activity.Activity;
+import com.dac.api.app.schedule.MailSchedule;
 import com.dac.api.app.service.activity.ActivityService;
 import com.dac.api.app.util.GenericMapper;
 
@@ -41,6 +39,9 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
 
     @Autowired
     private GenericMapper genericMapper;
+
+    @Autowired
+    private MailSchedule mailSchedule;
 
     @GetMapping("/")
     public ResponseEntity<ApiResponseDTO> index() {
@@ -99,16 +100,7 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
     }
 
     @GetMapping("/nextHour")
-    public ResponseEntity<ApiResponseDTO> getActivitiesStartingWithinNextHour() {
-        try {
-            List<Activity> activities = this.activityService.getActivitiesStartingWithinNextHour();
-            List<UserMailResponseDTO> activitiesResponse = activities.stream()
-                    .map(user -> this.genericMapper.toDTO(user, UserMailResponseDTO.class))
-                    .collect(Collectors.toList());
-            return ResponseEntity
-                    .ok(new ApiResponseDTO("List of activities starting within next hour", activitiesResponse));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
-        }
+    public void getActivitiesStartingWithinNextHour() {
+        this.mailSchedule.sendMailAlert();
     }
 }

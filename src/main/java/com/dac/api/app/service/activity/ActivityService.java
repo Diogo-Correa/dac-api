@@ -3,7 +3,6 @@ package com.dac.api.app.service.activity;
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
