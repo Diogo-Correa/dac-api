@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.AuthDTO;
 import com.dac.api.app.dto.AuthResponseDTO;
 import com.dac.api.app.service.user.UserService;
