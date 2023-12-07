@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.SpaceSaveDTO;
 import com.dac.api.app.model.space.Space;
 import com.dac.api.app.service.space.SpaceService;
@@ -30,28 +32,54 @@ public class SpaceController {
     private SpaceService spaceService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Space>> index() {
-        return ResponseEntity.ok(this.spaceService.findAll());
+    public ResponseEntity<ApiResponseDTO> index() {
+        try {
+            List<Space> spaces = this.spaceService.findAll();
+            return ResponseEntity.ok(new ApiResponseDTO("List of spaces", spaces));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Space>> show(@PathVariable Long id) {
-        return ResponseEntity.ok(this.spaceService.findById(id));
+    public ResponseEntity<ApiResponseDTO> show(@PathVariable Long id) {
+        try {
+            Optional<Space> space = this.spaceService.findById(id);
+            return ResponseEntity.ok(new ApiResponseDTO("Show space", space));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}/edition/{editionId}")
-    public void delete(@PathVariable Long id, @PathVariable Long editionId) {
-        this.spaceService.deleteById(id, editionId);
+    public ResponseEntity<ApiResponseDTO> delete(@PathVariable Long id, @PathVariable Long editionId) {
+        try {
+            this.spaceService.deleteById(id, editionId);
+            return ResponseEntity.ok(new ApiResponseDTO("Space deleted", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PostMapping("/{editionId}")
-    public ResponseEntity<Space> create(@PathVariable Long editionId, @Valid @RequestBody SpaceSaveDTO entity) {
-        return ResponseEntity.ok(this.spaceService.save(editionId, entity));
+    public ResponseEntity<ApiResponseDTO> create(@PathVariable Long editionId,
+            @Valid @RequestBody SpaceSaveDTO entity) {
+        try {
+            Space space = this.spaceService.save(editionId, entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Space created", space));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}/edition/{editionId}")
-    public ResponseEntity<Space> update(@PathVariable Long id, @Valid @PathVariable Long editionId,
+    public ResponseEntity<ApiResponseDTO> update(@PathVariable Long id, @Valid @PathVariable Long editionId,
             @Valid @RequestBody SpaceSaveDTO entity) {
-        return ResponseEntity.ok(this.spaceService.update(id, editionId, entity));
+        try {
+            Space space = this.spaceService.update(id, editionId, entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Space updated", space));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 }

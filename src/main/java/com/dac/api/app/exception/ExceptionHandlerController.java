@@ -13,7 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.ErrorMessageDTO;
 
 @ControllerAdvice
@@ -37,6 +40,13 @@ public class ExceptionHandlerController {
         });
 
         return new ResponseEntity<>(dto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ApiResponseDTO handleException(Exception ex) {
+        return new ApiResponseDTO("Erro interno no servidor", null);
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
