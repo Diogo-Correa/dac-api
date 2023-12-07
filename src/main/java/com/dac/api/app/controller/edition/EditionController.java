@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,50 +17,82 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.EditionSaveDTO;
 import com.dac.api.app.model.edition.Edition;
 import com.dac.api.app.service.edition.EditionService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Editions endpoints")
 @RestController
 @RequestMapping("/api/editions")
-public class EditionController implements Controller<Edition, EditionSaveDTO> {
+public class EditionController implements Controller<EditionSaveDTO> {
 
     @Autowired
     private EditionService editionService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Edition>> index() {
-        return ResponseEntity.ok(this.editionService.findAll());
+    public ResponseEntity<ApiResponseDTO> index() {
+        try {
+            List<Edition> editions = this.editionService.findAll();
+            return ResponseEntity.ok(new ApiResponseDTO("List of editions", editions));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Edition>> show(@PathVariable Long id) {
-        return ResponseEntity.ok(this.editionService.findById(id));
+    public ResponseEntity<ApiResponseDTO> show(@PathVariable Long id) {
+        try {
+            Optional<Edition> edition = this.editionService.findById(id);
+            return ResponseEntity.ok(new ApiResponseDTO("Show edition", edition));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        this.editionService.deleteById(id);
+    public ResponseEntity<ApiResponseDTO> delete(@PathVariable Long id) {
+        try {
+            this.editionService.deleteById(id);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition deleted", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PostMapping("/")
-    public ResponseEntity<Edition> create(@RequestBody EditionSaveDTO entity) {
-        return ResponseEntity.ok(this.editionService.save(entity));
+    public ResponseEntity<ApiResponseDTO> create(@Valid @RequestBody EditionSaveDTO entity) {
+        try {
+            Edition edition = this.editionService.save(entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition created", edition));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Edition> update(@PathVariable Long id, @RequestBody EditionSaveDTO entity) {
-        return ResponseEntity.ok(this.editionService.update(id, entity));
+    public ResponseEntity<ApiResponseDTO> update(@PathVariable Long id, @Valid @RequestBody EditionSaveDTO entity) {
+        try {
+            Edition edition = this.editionService.update(id, entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition updated", edition));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PatchMapping("/{id}/organizer/{organizer_id}")
     @Operation(description = "Endpoint para adição de organizador.")
-    public ResponseEntity<Edition> updateOrganizer(@PathVariable Long id, @PathVariable Long organizer_id) {
-        return ResponseEntity.ok(this.editionService.updateOrganizer(id, organizer_id));
+    public ResponseEntity<ApiResponseDTO> updateOrganizer(@PathVariable Long id, @PathVariable Long organizer_id) {
+        try {
+            Edition edition = this.editionService.updateOrganizer(id, organizer_id);
+            return ResponseEntity.ok(new ApiResponseDTO("Edition organizer setted", edition));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
 }

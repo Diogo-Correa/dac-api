@@ -12,6 +12,7 @@ import com.dac.api.app.dto.AuthDTO;
 import com.dac.api.app.service.user.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @Tag(name = "Auth Controller")
 @RestController
@@ -22,7 +23,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/")
-    public ResponseEntity<Object> create(@RequestBody AuthDTO user) {
+    public ResponseEntity<Object> create(@Valid @RequestBody AuthDTO user) {
         try {
             var response = this.userService.authenticate(user);
             return ResponseEntity.ok().body(response);

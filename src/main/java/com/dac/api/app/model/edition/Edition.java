@@ -7,6 +7,7 @@ import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.model.user.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,6 +39,7 @@ public class Edition {
 
     @ManyToOne
     @JoinColumn(name = "event_id")
+    @JsonIgnore
     private Event event;
 
     @OneToMany(mappedBy = "edition")

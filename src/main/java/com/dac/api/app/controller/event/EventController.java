@@ -3,6 +3,8 @@ package com.dac.api.app.controller.event;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dac.api.app.controller.Controller;
+import com.dac.api.app.dto.ApiResponseDTO;
 import com.dac.api.app.dto.EventSaveDTO;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.service.event.EventService;
@@ -24,37 +27,59 @@ import jakarta.validation.Valid;
 @Tag(name = "Event endpoints")
 @RestController
 @RequestMapping("/api/events")
-public class EventController implements Controller<Event, EventSaveDTO> {
-    private final EventService eventService;
+public class EventController implements Controller<EventSaveDTO> {
 
-    public EventController(EventService eventService) {
-        this.eventService = eventService;
-    }
+    @Autowired
+    private EventService eventService;
 
     @GetMapping("/")
-    public ResponseEntity<List<Event>> index() {
-        return ResponseEntity.ok(this.eventService.findAll());
+    public ResponseEntity<ApiResponseDTO> index() {
+        try {
+            List<Event> events = this.eventService.findAll();
+            return ResponseEntity.ok(new ApiResponseDTO("List of events", events));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Event>> show(@PathVariable Long id) {
-        return ResponseEntity.ok(this.eventService.findById(id));
+    public ResponseEntity<ApiResponseDTO> show(@PathVariable Long id) {
+        try {
+            Optional<Event> event = this.eventService.findById(id);
+            return ResponseEntity.ok(new ApiResponseDTO("Show event", event));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        this.eventService.deleteById(id);
+    public ResponseEntity<ApiResponseDTO> delete(@PathVariable Long id) {
+        try {
+            this.eventService.deleteById(id);
+            return ResponseEntity.ok(new ApiResponseDTO("Event deleted", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PostMapping("/")
-    public ResponseEntity<Event> create(@Valid @RequestBody EventSaveDTO entity) {
-        return ResponseEntity.ok(this.eventService.save(entity));
+    public ResponseEntity<ApiResponseDTO> create(@Valid @RequestBody EventSaveDTO entity) {
+        try {
+            Event event = this.eventService.save(entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Event created", event));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Event> update(Long id, EventSaveDTO dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ResponseEntity<ApiResponseDTO> update(@PathVariable Long id, @Valid @RequestBody EventSaveDTO entity) {
+        try {
+            Event event = this.eventService.update(id, entity);
+            return ResponseEntity.ok(new ApiResponseDTO("Event updated", event));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponseDTO(e.getMessage(), null));
+        }
     }
 
 }

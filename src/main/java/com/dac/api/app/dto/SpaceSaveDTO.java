@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class SpaceSaveDTO {
     private String name;
     private String location;
-    private String capacity;
+    private int capacity;
     private List<String> resources;
-    private Long activity_id;
 }
