@@ -48,7 +48,7 @@ public class ActivityController implements Controller<ActivitySaveDTO> {
         try {
             List<Activity> activities = this.activityService.findAll();
             List<ActivityResponseDTO> activitiesResponse = activities.stream()
-                    .map(user -> this.genericMapper.toDTO(user, ActivityResponseDTO.class))
+                    .map(activity -> this.genericMapper.toDTO(activity, ActivityResponseDTO.class))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(new ApiResponseDTO("List of activities", activitiesResponse));
         } catch (Exception e) {
