@@ -44,7 +44,7 @@ public class EventController implements Controller<EventSaveDTO> {
         try {
             List<Event> events = this.eventService.findAll();
             List<EventResponseDTO> response = events.stream()
-                    .map(user -> this.genericMapper.toDTO(user, EventResponseDTO.class))
+                    .map(event -> this.genericMapper.toDTO(event, EventResponseDTO.class))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(new ApiResponseDTO("List of events", response));
         } catch (Exception e) {

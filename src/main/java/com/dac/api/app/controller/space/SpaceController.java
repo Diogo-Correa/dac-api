@@ -43,7 +43,7 @@ public class SpaceController {
         try {
             List<Space> spaces = this.spaceService.findAll();
             List<SpaceResponseDTO> response = spaces.stream()
-                    .map(user -> this.genericMapper.toDTO(user, SpaceResponseDTO.class))
+                    .map(space -> this.genericMapper.toDTO(space, SpaceResponseDTO.class))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(new ApiResponseDTO("List of spaces", response));
         } catch (Exception e) {

@@ -22,6 +22,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import com.dac.api.app.model.user.User;
@@ -34,24 +35,35 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(EnumType.STRING)
+    @NotNull
     private ActivityType type;
+
+    @NotNull
     private String name;
+
+    @NotNull
     private String description;
 
+    @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate date;
 
+    @NotNull
     @DateTimeFormat(pattern = "HH:mm:ss")
     private Time startTime;
 
+    @NotNull
     @DateTimeFormat(pattern = "HH:mm:ss")
     private Time endTime;
+
+    @NotNull
+    private boolean mailSent = false;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "space_id")
     private Space space;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "edition_id")
     private Edition edition;
 

@@ -46,7 +46,7 @@ public class EditionController implements Controller<EditionSaveDTO> {
         try {
             List<Edition> editions = this.editionService.findAll();
             List<EditionResponseDTO> response = editions.stream()
-                    .map(user -> this.genericMapper.toDTO(user, EditionResponseDTO.class))
+                    .map(edition -> this.genericMapper.toDTO(edition, EditionResponseDTO.class))
                     .collect(Collectors.toList());
             return ResponseEntity.ok(new ApiResponseDTO("List of editions", response));
         } catch (Exception e) {

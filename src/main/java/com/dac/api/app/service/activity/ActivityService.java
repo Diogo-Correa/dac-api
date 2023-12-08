@@ -114,10 +114,12 @@ public class ActivityService implements Service<Activity, ActivitySaveDTO> {
 
         LocalDateTime oneHourLater = now.plusHours(1);
 
-        System.out.println("OneHourLater: " + oneHourLater.toLocalTime());
-
         return activityRepository.findByDateAndStartTimeBetween(now.toLocalDate(),
                 now.toLocalTime(), oneHourLater.toLocalTime());
+    }
+
+    public Activity setMailSent(Activity data) {
+        return this.activityRepository.save(data);
     }
 
 }
