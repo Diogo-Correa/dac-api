@@ -1,12 +1,14 @@
 package com.dac.api.app.model.edition;
 
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDate;
 
 import com.dac.api.app.model.activity.Activity;
 import com.dac.api.app.model.event.Event;
 import com.dac.api.app.model.user.User;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -29,10 +31,10 @@ public class Edition {
     private int year;
     private int editionNumber;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate startDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate endDate;
 
     private String city;

@@ -33,7 +33,7 @@ public class SecurityConfig {
 
                         // public endpoints
                         "/api/auth/**",
-                        "/api/users/**"
+                        "/api/users/"
         };
 
         private static final String[] ADMIN_POST_WHITELIST = {
