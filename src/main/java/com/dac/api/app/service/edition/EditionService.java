@@ -86,23 +86,10 @@ public class EditionService implements Service<Edition, EditionSaveDTO> {
         if (edition.getOrganizer() == null || edition.getOrganizer() != user || user.getRole() != UserRole.ADMIN)
             throw new UserNotOrganizerException();
 
-        Event event = this.eventRepository.findById(data.getEvent_id()).orElseThrow(
+        this.eventRepository.findById(data.getEvent_id()).orElseThrow(
                 () -> {
                     throw new EventNotFoundException();
                 });
-
-        if (data.getCity() != null)
-            edition.setCity(data.getCity());
-        if (Integer.valueOf(data.getEditionNumber()) != null)
-            edition.setEditionNumber(data.getEditionNumber());
-        if (Integer.valueOf(data.getYear()) != null)
-            edition.setYear(data.getYear());
-        if (data.getStartDate() != null)
-            edition.setStartDate(data.getStartDate());
-        if (data.getEndDate() != null)
-            edition.setEndDate(data.getEndDate());
-        if (data.getEvent_id() != null)
-            edition.setEvent(event);
 
         return this.editionRepository.save(edition);
     }
