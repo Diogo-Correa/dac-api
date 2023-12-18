@@ -87,8 +87,27 @@ public class ActivityService implements Service<Activity, ActivitySaveDTO> {
                     throw new ActivityNotFoundException();
                 });
 
+        Edition edition = this.editionRepository.findById(data.getEdition_id()).orElseThrow(
+                () -> {
+                    throw new EditionNotFoundException();
+                });
+
         if (authUser != activity.getEdition().getOrganizer().getId())
             throw new UserNotOrganizerException();
+
+        Space space = this.spaceRepository.findById(data.getSpace_id()).orElseThrow(
+                () -> {
+                    throw new SpaceNotFoundException();
+                });
+
+        activity.setType(data.getType());
+        activity.setName(data.getName());
+        activity.setDescription(data.getDescription());
+        activity.setDate(data.getDate());
+        activity.setStartTime(data.getStartTime());
+        activity.setEndTime(data.getEndTime());
+        activity.setEdition(edition);
+        activity.setSpace(space);
 
         return this.activityRepository.save(activity);
     }

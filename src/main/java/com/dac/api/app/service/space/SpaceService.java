@@ -62,7 +62,7 @@ public class SpaceService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long authUser = Long.valueOf(authentication.getName());
 
-        Edition edition = this.editionRepository.findById(id).orElseThrow(
+        Edition edition = this.editionRepository.findById(editionId).orElseThrow(
                 () -> {
                     throw new EditionNotFoundException();
                 });

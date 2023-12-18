@@ -41,9 +41,6 @@ public class ActivitySaveDTO {
     private Time endTime;
 
     @NotNull
-    private String location;
-
-    @NotNull
     private Long edition_id;
 
     @NotNull
